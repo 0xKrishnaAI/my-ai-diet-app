@@ -3,9 +3,11 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { MagneticButton } from '@/components/antigravity/magnetic-button'
 import { BlurText } from '@/components/ui/blur-text'
+import { StaggerText } from '@/components/ui/stagger-text'
 import { TypingEffect } from '@/components/ui/typing-effect'
 import { AnimatedCounter } from '@/components/ui/animated-counter'
 import { AuroraBackground } from '@/components/ui/aurora-background'
+import { ParticleBackground } from '@/components/ui/particle-background'
 import { Sparkles, ArrowRight, Play, Apple, Salad, Carrot, Leaf } from 'lucide-react'
 import { useState } from 'react'
 
@@ -27,6 +29,8 @@ export function Hero({ onGetStarted }: HeroProps) {
   return (
     <AuroraBackground className="min-h-screen">
       <section className="relative flex flex-col items-center justify-center px-4 sm:px-6 py-16 sm:py-20 min-h-screen overflow-hidden">
+        {/* Particle background */}
+        <ParticleBackground particleCount={40} className="z-0" />
         {/* Floating food icons */}
         {!prefersReducedMotion && (
           <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
@@ -82,10 +86,10 @@ export function Hero({ onGetStarted }: HeroProps) {
           <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-4 sm:mb-6">
             <BlurText text="Eat Smarter with" className="text-foreground block" />
             <span className="text-primary mt-2 block">
-              <BlurText text="BiteAI" delay={0.5} />
+              <StaggerText text="BiteAI" delay={0.5} staggerDelay={0.08} />
             </span>
           </h1>
-          
+
           {/* Animated tagline */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -101,7 +105,7 @@ export function Hero({ onGetStarted }: HeroProps) {
               />
             </span>
           </motion.div>
-          
+
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -129,7 +133,7 @@ export function Hero({ onGetStarted }: HeroProps) {
                 </motion.span>
               </span>
             </MagneticButton>
-            
+
             <motion.button
               whileHover={prefersReducedMotion ? {} : { scale: 1.05 }}
               whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
@@ -161,8 +165,8 @@ export function Hero({ onGetStarted }: HeroProps) {
               { value: 2000000, suffix: '+', label: 'Meals Generated' },
               { value: 98, suffix: '%', label: 'Goal Success' },
             ].map((stat) => (
-              <motion.div 
-                key={stat.label} 
+              <motion.div
+                key={stat.label}
                 className="text-center"
                 whileHover={prefersReducedMotion ? {} : { y: -5 }}
               >
@@ -188,10 +192,10 @@ export function Hero({ onGetStarted }: HeroProps) {
             transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
             className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex items-start justify-center p-2"
           >
-            <motion.div 
+            <motion.div
               animate={prefersReducedMotion ? {} : { opacity: [1, 0.3, 1], y: [0, 4, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-1 h-2 rounded-full bg-primary" 
+              className="w-1 h-2 rounded-full bg-primary"
             />
           </motion.div>
         </motion.div>

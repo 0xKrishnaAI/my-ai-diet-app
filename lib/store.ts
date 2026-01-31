@@ -50,12 +50,14 @@ const defaultState: AppState = {
   hasSeenSplash: false,
 }
 
-const STORAGE_KEY = 'biteai-state'
+const GLOBAL_STORAGE_KEY = 'biteai-state'
 
-function loadState(): AppState {
+function loadState(userEmail?: string): AppState {
   if (typeof window === 'undefined') return defaultState
   try {
-    const stored = localStorage.getItem(STORAGE_KEY)
+    // If user is logged in, use their specific key. Otherwise use default global key (or could be temp)
+    const key = userEmail ? `biteai-state-${userEmail}` : GLOBAL_STORAGE_KEY
+    const stored = localStorage.getItem(key)
     if (stored) {
       const parsed = JSON.parse(stored)
       return { ...defaultState, ...parsed, profile: { ...defaultProfile, ...parsed.profile } }
@@ -66,33 +68,48 @@ function loadState(): AppState {
   return defaultState
 }
 
-function saveState(state: AppState) {
+function saveState(state: AppState, userEmail?: string) {
   if (typeof window === 'undefined') return
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+    const key = userEmail ? `biteai-state-${userEmail}` : GLOBAL_STORAGE_KEY
+    localStorage.setItem(key, JSON.stringify(state))
   } catch {
     // Ignore storage errors
   }
 }
 
 // Custom hook for app state with localStorage persistence
+import { auth } from '@/lib/auth'
+
 export function useAppState() {
   const [state, setState] = useState<AppState>(defaultState)
   const [isLoaded, setIsLoaded] = useState(false)
+  const [currentUserEmail, setCurrentUserEmail] = useState<string | undefined>(undefined)
 
-  // Load from localStorage on mount
+  // Listen for auth changes
   useEffect(() => {
-    const loaded = loadState()
-    setState(loaded)
-    setIsLoaded(true)
+    const checkUser = () => {
+      const user = auth.getCurrentUser()
+      const email = user?.email
+      setCurrentUserEmail(email)
+
+      // Reload state when user changes
+      const loaded = loadState(email)
+      setState(loaded)
+      setIsLoaded(true)
+    }
+
+    checkUser()
+    window.addEventListener('auth-change', checkUser)
+    return () => window.removeEventListener('auth-change', checkUser)
   }, [])
 
   // Save to localStorage on state change
   useEffect(() => {
     if (isLoaded) {
-      saveState(state)
+      saveState(state, currentUserEmail)
     }
-  }, [state, isLoaded])
+  }, [state, isLoaded, currentUserEmail])
 
   const updateProfile = useCallback((updates: Partial<UserProfile>) => {
     setState((prev) => ({
@@ -122,7 +139,7 @@ export function useAppState() {
     setState((prev) => ({ ...prev, waterGlasses: Math.min(prev.waterGlasses + 1, 12) }))
   }, [])
 
-  const removeWater = useCallback(() => {
+  const removeWater = useCallback((glasses: number) => {
     setState((prev) => ({ ...prev, waterGlasses: Math.max(prev.waterGlasses - 1, 0) }))
   }, [])
 
@@ -133,9 +150,10 @@ export function useAppState() {
   const resetState = useCallback(() => {
     setState(defaultState)
     if (typeof window !== 'undefined') {
-      localStorage.removeItem(STORAGE_KEY)
+      const key = currentUserEmail ? `biteai-state-${currentUserEmail}` : GLOBAL_STORAGE_KEY
+      localStorage.removeItem(key)
     }
-  }, [])
+  }, [currentUserEmail])
 
   return {
     state,

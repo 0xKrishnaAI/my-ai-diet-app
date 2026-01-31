@@ -15,7 +15,7 @@ interface DockItem {
 
 const dockItems: DockItem[] = [
   { icon: <Home className="w-5 h-5" />, label: 'Home', href: '/' },
-  { icon: <Target className="w-5 h-5" />, label: 'Goals', href: '/onboarding' },
+  { icon: <Target className="w-5 h-5" />, label: 'Goals', href: '/profile' },
   { icon: <Utensils className="w-5 h-5" />, label: 'Meals', href: '/dashboard' },
   { icon: <Droplets className="w-5 h-5" />, label: 'Water', href: '/dashboard#water' },
   { icon: <User className="w-5 h-5" />, label: 'Profile', href: '/profile' },
@@ -62,15 +62,15 @@ export function FloatingDock({ activeIndex = 0, onNavigate }: FloatingDockProps)
           className={cn(
             'relative p-2.5 sm:p-3 rounded-xl transition-colors duration-200',
             'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-            activeIndex === index 
-              ? 'text-primary bg-primary/10' 
+            activeIndex === index
+              ? 'text-primary bg-primary/10'
               : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
           )}
           aria-label={item.label}
           aria-current={activeIndex === index ? 'page' : undefined}
         >
           {item.icon}
-          
+
           {/* Active indicator */}
           {activeIndex === index && (
             <motion.div
@@ -79,7 +79,7 @@ export function FloatingDock({ activeIndex = 0, onNavigate }: FloatingDockProps)
               transition={{ type: 'spring', stiffness: 500, damping: 30 }}
             />
           )}
-          
+
           {/* Label tooltip */}
           <AnimatePresence>
             {hoveredIndex === index && (

@@ -3,23 +3,22 @@
 import React from "react"
 
 import { useRef, useState } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion, HTMLMotionProps } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
-interface MagneticButtonProps {
+interface MagneticButtonProps extends Omit<HTMLMotionProps<"button">, "ref"> {
   children: React.ReactNode
   className?: string
-  onClick?: () => void
   strength?: number
-  disabled?: boolean
 }
 
-export function MagneticButton({ 
-  children, 
-  className, 
+export function MagneticButton({
+  children,
+  className,
   onClick,
   strength = 0.4,
-  disabled = false
+  disabled = false,
+  ...props
 }: MagneticButtonProps) {
   const ref = useRef<HTMLButtonElement>(null)
   const prefersReducedMotion = useReducedMotion()
@@ -27,14 +26,14 @@ export function MagneticButton({
 
   const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (prefersReducedMotion || disabled || !ref.current) return
-    
+
     const rect = ref.current.getBoundingClientRect()
     const centerX = rect.left + rect.width / 2
     const centerY = rect.top + rect.height / 2
-    
+
     const distanceX = (e.clientX - centerX) * strength
     const distanceY = (e.clientY - centerY) * strength
-    
+
     setPosition({ x: distanceX, y: distanceY })
   }
 
@@ -59,6 +58,7 @@ export function MagneticButton({
           disabled && 'opacity-50 cursor-not-allowed',
           className
         )}
+        {...props}
       >
         {children}
       </button>
@@ -72,6 +72,7 @@ export function MagneticButton({
       disabled={disabled}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      {...props}
       animate={{ x: position.x, y: position.y }}
       transition={{ type: 'spring', stiffness: 150, damping: 15, mass: 0.1 }}
       whileHover={{ scale: 1.02 }}

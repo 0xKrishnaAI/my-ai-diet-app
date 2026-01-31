@@ -13,6 +13,7 @@ import { Footer } from '@/components/sections/footer'
 import { FloatingDock } from '@/components/antigravity/floating-dock'
 import { SplashScreen } from '@/components/ui/splash-screen'
 import { PageTransition } from '@/components/ui/page-transition'
+import { ScrollReveal } from '@/components/ui/scroll-reveal'
 import { useAppState } from '@/lib/store'
 
 export default function HomePage() {
@@ -67,12 +68,24 @@ export default function HomePage() {
     <PageTransition>
       <main className="relative min-h-screen bg-background grain-overlay">
         <Hero onGetStarted={handleGetStarted} />
-        <Features />
-        <HowItWorks />
-        <Testimonials />
-        <Pricing onGetStarted={handleGetStarted} />
-        <FAQ />
-        <CTA onGetStarted={handleGetStarted} />
+        <ScrollReveal direction="up" delay={0}>
+          <Features />
+        </ScrollReveal>
+        <ScrollReveal direction="up" delay={0.1}>
+          <HowItWorks />
+        </ScrollReveal>
+        <ScrollReveal direction="up" delay={0}>
+          <Testimonials />
+        </ScrollReveal>
+        <ScrollReveal direction="up" delay={0.1}>
+          <Pricing onGetStarted={handleGetStarted} />
+        </ScrollReveal>
+        <ScrollReveal direction="up" delay={0}>
+          <FAQ />
+        </ScrollReveal>
+        <ScrollReveal direction="fade" delay={0}>
+          <CTA onGetStarted={handleGetStarted} />
+        </ScrollReveal>
         <Footer />
         <FloatingDock activeIndex={0} onNavigate={handleNavigate} />
       </main>

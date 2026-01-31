@@ -16,7 +16,7 @@ export function FloatingActionButton({ onQuickSwap, onScanMeal, onAiSuggest }: F
 
   const actions = [
     { icon: RefreshCw, label: 'Quick Swap', onClick: onQuickSwap, color: 'bg-blue-500' },
-    { icon: Camera, label: 'Scan Meal', onClick: onScanMeal, color: 'bg-purple-500' },
+    { icon: Camera, label: 'Upload Photo', onClick: onScanMeal, color: 'bg-purple-500' },
     { icon: Sparkles, label: 'AI Suggest', onClick: onAiSuggest, color: 'bg-primary' },
   ]
 
@@ -48,7 +48,7 @@ export function FloatingActionButton({ onQuickSwap, onScanMeal, onAiSuggest }: F
                 >
                   {action.label}
                 </motion.span>
-                
+
                 {/* Icon button */}
                 <div
                   className={cn(

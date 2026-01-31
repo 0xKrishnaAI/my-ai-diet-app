@@ -2,6 +2,10 @@ import React from "react"
 import type { Metadata, Viewport } from 'next'
 import { Inter, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { ErrorBoundary } from '@/components/ui/error-boundary'
+import { ToastProvider } from '@/components/ui/toast'
+import { AuthGuard } from '@/components/auth/auth-guard'
+import { LazyMotion, domMax } from "framer-motion"
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -46,7 +50,15 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${inter.className} ${geistMono.variable} font-sans antialiased grain-overlay`}>
-        {children}
+        <LazyMotion features={domMax}>
+          <ErrorBoundary>
+            <ToastProvider>
+              <AuthGuard>
+                {children}
+              </AuthGuard>
+            </ToastProvider>
+          </ErrorBoundary>
+        </LazyMotion>
         <Analytics />
       </body>
     </html>

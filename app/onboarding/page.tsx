@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { GlassCard } from '@/components/ui/glass-card'
 import { MagneticButton } from '@/components/antigravity/magnetic-button'
 import { PageTransition } from '@/components/ui/page-transition'
+import { ConfettiEffect } from '@/components/ui/confetti-effect'
+import { useToast } from '@/components/ui/toast'
 import { useAppState } from '@/lib/store'
 import { goals, dietaryPreferences } from '@/data/mock-plan'
 import { ArrowLeft, ArrowRight, Flame, Dumbbell, Scale, Zap, Check, User, Activity, AlertCircle } from 'lucide-react'
@@ -23,15 +25,21 @@ const activityLevels = [
   { id: 'light', label: 'Lightly Active', description: '1-3 days/week', multiplier: 1.375 },
   { id: 'moderate', label: 'Moderate', description: '3-5 days/week', multiplier: 1.55 },
   { id: 'active', label: 'Very Active', description: '6-7 days/week', multiplier: 1.725 },
+  { id: 'active', label: 'Very Active', description: '6-7 days/week', multiplier: 1.725 },
   { id: 'athlete', label: 'Athlete', description: 'Training twice daily', multiplier: 1.9 },
 ]
+
+import { auth } from '@/lib/auth'
 
 export default function OnboardingPage() {
   const router = useRouter()
   const { state, isLoaded, updateProfile } = useAppState()
+  const { showToast } = useToast()
   const [step, setStep] = useState(0)
   const [direction, setDirection] = useState(1)
-  
+  const [showConfetti, setShowConfetti] = useState(false)
+  const [checkAuth, setCheckAuth] = useState(true)
+
   // Local form state
   const [formData, setFormData] = useState({
     name: '',
@@ -44,6 +52,26 @@ export default function OnboardingPage() {
     activityLevel: 'moderate',
     allergies: [] as string[],
   })
+
+  // Prefill from Auth
+  useEffect(() => {
+    if (checkAuth) {
+      // Dynamic import to avoid SSR issues if any, or just direct import
+      // We'll use the auth object we imported implicitly?
+      // Need to import auth first
+      import('@/lib/auth').then(({ auth }) => {
+        const user = auth.getCurrentUser()
+        if (user) {
+          setFormData(prev => ({
+            ...prev,
+            name: user.name || prev.name,
+            age: user.age || prev.age,
+          }))
+        }
+      })
+      setCheckAuth(false)
+    }
+  }, [checkAuth])
 
   // Load existing profile data
   useEffect(() => {
@@ -68,15 +96,22 @@ export default function OnboardingPage() {
     if (step < totalSteps - 1) {
       setDirection(1)
       setStep(step + 1)
+      showToast(`Step ${step + 2} of ${totalSteps}`, 'info')
     } else {
-      // Save profile and navigate
-      updateProfile({
-        ...formData,
-        completedOnboarding: true,
-        joinedDate: state.profile.joinedDate || new Date().toISOString(),
-        streak: state.profile.streak || 0,
-      })
-      router.push('/analyzing')
+      // Trigger confetti before navigation
+      setShowConfetti(true)
+      showToast('Profile complete! Generating your plan...', 'success')
+
+      // Save profile and navigate after a brief delay
+      setTimeout(() => {
+        updateProfile({
+          ...formData,
+          completedOnboarding: true,
+          joinedDate: state.profile.joinedDate || new Date().toISOString(),
+          streak: state.profile.streak || 0,
+        })
+        router.push('/analyzing')
+      }, 1500)
     }
   }
 
@@ -170,7 +205,7 @@ export default function OnboardingPage() {
             <motion.div
               key={i}
               initial={{ scale: 0.8 }}
-              animate={{ 
+              animate={{
                 scale: i === step ? 1.2 : 1,
                 backgroundColor: i <= step ? 'oklch(0.696 0.17 145)' : 'oklch(0.2 0.005 285)'
               }}
@@ -509,6 +544,14 @@ export default function OnboardingPage() {
           </MagneticButton>
         </motion.div>
       </main>
+
+      {/* Confetti celebration on completion */}
+      <ConfettiEffect
+        active={showConfetti}
+        onComplete={() => setShowConfetti(false)}
+        particleCount={80}
+        duration={2500}
+      />
     </PageTransition>
   )
 }

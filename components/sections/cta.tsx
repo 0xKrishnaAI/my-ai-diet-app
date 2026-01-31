@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from 'framer-motion'
 import { MagneticButton } from '@/components/antigravity/magnetic-button'
+import { ShimmerButton } from '@/components/ui/shimmer-button'
 import { ArrowRight, Sparkles } from 'lucide-react'
 
 interface CTAProps {
@@ -47,10 +48,10 @@ export function CTA({ onGetStarted }: CTAProps) {
             Ready to Transform Your{' '}
             <span className="text-primary">Nutrition?</span>
           </h2>
-          
+
           {/* Description */}
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-            Join thousands who have already revolutionized their health with AI-powered meal planning. 
+            Join thousands who have already revolutionized their health with AI-powered meal planning.
             Start your free trial today - no credit card required.
           </p>
 
@@ -62,13 +63,13 @@ export function CTA({ onGetStarted }: CTAProps) {
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </span>
             </MagneticButton>
-            
-            <button
+
+            <ShimmerButton
               onClick={onGetStarted}
-              className="w-full sm:w-auto px-8 py-4 rounded-full font-semibold text-foreground border border-glass-border hover:bg-secondary transition-colors"
+              className="w-full sm:w-auto bg-secondary hover:bg-secondary/80"
             >
               Schedule Demo
-            </button>
+            </ShimmerButton>
           </div>
 
           {/* Social proof */}

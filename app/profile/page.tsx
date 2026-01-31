@@ -10,11 +10,12 @@ import { StreakCard } from '@/components/ui/streak-display'
 import { ProfileCardSkeleton } from '@/components/ui/skeleton-loaders'
 import { PageTransition } from '@/components/ui/page-transition'
 import { MagneticButton } from '@/components/antigravity/magnetic-button'
+import { useToast } from '@/components/ui/toast'
 import { useAppState, vibeConfigs } from '@/lib/store'
 import { goals, dietaryPreferences } from '@/data/mock-plan'
-import { 
-  User, Settings, Edit2, Save, X, ChevronRight, 
-  Flame, Dumbbell, Scale, Zap, LogOut, Check 
+import {
+  User, Settings, Edit2, Save, X, ChevronRight,
+  Flame, Dumbbell, Scale, Zap, LogOut, Check
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -36,9 +37,9 @@ const activityLevels = [
 export default function ProfilePage() {
   const router = useRouter()
   const { state, isLoaded, updateProfile, resetState } = useAppState()
+  const { showToast } = useToast()
   const [isEditing, setIsEditing] = useState(false)
   const [editedProfile, setEditedProfile] = useState(state.profile)
-  const [saveSuccess, setSaveSuccess] = useState(false)
   const [activeSection, setActiveSection] = useState<string | null>(null)
 
   useEffect(() => {
@@ -50,8 +51,7 @@ export default function ProfilePage() {
   const handleSave = () => {
     updateProfile(editedProfile)
     setIsEditing(false)
-    setSaveSuccess(true)
-    setTimeout(() => setSaveSuccess(false), 2000)
+    showToast('Profile saved successfully!', 'success')
   }
 
   const handleCancel = () => {
@@ -138,21 +138,6 @@ export default function ProfilePage() {
           </div>
         </motion.header>
 
-        {/* Save success toast */}
-        <AnimatePresence>
-          {saveSuccess && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium flex items-center gap-2"
-            >
-              <Check className="w-4 h-4" />
-              Profile saved
-            </motion.div>
-          )}
-        </AnimatePresence>
-
         <div className="max-w-2xl mx-auto px-6 py-8 space-y-6">
           {/* Profile incomplete prompt */}
           {isProfileIncomplete && !isEditing && (
@@ -177,14 +162,36 @@ export default function ProfilePage() {
             className="bg-glass backdrop-blur-xl rounded-2xl border border-glass-border p-6"
           >
             <div className="flex items-center gap-4 mb-6">
-              {/* Avatar */}
+              {/* Avatar with glow */}
               <motion.div
                 whileHover={{ scale: 1.05, rotate: 5 }}
-                className="w-20 h-20 rounded-full bg-primary/20 border-2 border-primary/30 flex items-center justify-center"
+                animate={{
+                  boxShadow: [
+                    '0 0 20px rgba(34, 197, 94, 0.3)',
+                    '0 0 40px rgba(34, 197, 94, 0.5)',
+                    '0 0 20px rgba(34, 197, 94, 0.3)',
+                  ]
+                }}
+                transition={{
+                  boxShadow: { duration: 2, repeat: Infinity, ease: 'easeInOut' }
+                }}
+                className="w-20 h-20 rounded-full bg-primary/20 border-2 border-primary/30 flex items-center justify-center relative overflow-hidden"
               >
-                <span className="text-2xl font-bold text-primary">{initials}</span>
+                <span className="text-2xl font-bold text-primary relative z-10">{initials}</span>
+                {/* Animated gradient overlay */}
+                <motion.div
+                  animate={{
+                    rotate: [0, 360],
+                  }}
+                  transition={{
+                    duration: 8,
+                    repeat: Infinity,
+                    ease: 'linear',
+                  }}
+                  className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-transparent to-primary/40"
+                />
               </motion.div>
-              
+
               <div className="flex-1">
                 {isEditing ? (
                   <input
@@ -356,8 +363,8 @@ export default function ProfilePage() {
                   <p className="font-semibold text-foreground">
                     {state.profile.dietaryPreferences.length > 0
                       ? state.profile.dietaryPreferences.map(
-                          (p) => dietaryPreferences.find((d) => d.id === p)?.label
-                        ).filter(Boolean).join(', ')
+                        (p) => dietaryPreferences.find((d) => d.id === p)?.label
+                      ).filter(Boolean).join(', ')
                       : 'No restrictions'}
                   </p>
                 </div>
@@ -418,9 +425,9 @@ export default function ProfilePage() {
               </div>
               <ChevronRight className="w-5 h-5 text-muted-foreground" />
             </button>
-            
+
             <div className="border-t border-glass-border" />
-            
+
             <button
               onClick={() => {
                 resetState()
