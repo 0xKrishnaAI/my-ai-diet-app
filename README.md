@@ -1,30 +1,88 @@
-# AI Diet System
+# BiteAI - AI Nutrition System 🥗
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+> Your personal AI nutritionist. Get custom meal plans tailored to your goals, powered by advanced machine learning.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/namechanger2007-6099s-projects/v0-ai-diet-system)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/rIGdARgxcPS)
+![BiteAI Banner](public/logo.png)
 
-## Overview
+## ✨ Features
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+### 🔐 Authentication & Profiles
+*   **Secure Sign Up/Login**: Create personalized accounts with email & password.
+*   **Multi-User Support**: Seamlessly switch between user profiles on the same device.
+*   **Persistent Data**: Your profile, stats, and preferences are saved locally.
 
-## Deployment
+### 🍽️ AI Meal Planning
+*   **Smart Diet Plans**: Personalized meal suggestions based on your age, weight, and goals (Weight Loss, Muscle Gain, etc.).
+*   **Photo Upload**: Upload a photo of your meal to instantly log it (Simulated AI analysis).
+*   **Dietary Preferences**: Support for Vegan, Keto, Paleo, and more.
 
-Your project is live at:
+### 🎨 Modern UI/UX
+*   **Glassmorphism Design**: Sleek, modern interface with blurred glass effects.
+*   **Smooth Animations**: Powered by `framer-motion` for fluid page transitions and scroll reveals.
+*   **Interactive Components**:
+    *   **Sparkling Buttons**: Custom shimmer effects on primary actions.
+    *   **Particle Backgrounds**: Dynamic, floating particle effects.
+    *   **Staggered Text**: Elegant text entrance animations.
+    *   **Confetti Celebrations**: Rewards for completing goals!
 
-**[https://vercel.com/namechanger2007-6099s-projects/v0-ai-diet-system](https://vercel.com/namechanger2007-6099s-projects/v0-ai-diet-system)**
+### 📊 Dashboard & Tracking
+*   **Hydration Tracker**: Log your daily water intake.
+*   **Calorie & Macro Tracking**: Visualize your nutrition progress.
+*   **Streak System**: Keep your momentum going with daily streak tracking.
 
-## Build your app
+## 🛠️ Tech Stack
 
-Continue building your app on:
+*   **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
+*   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+*   **Animations**: [Framer Motion](https://www.framer.com/motion/)
+*   **Icons**: [Lucide React](https://lucide.dev/)
+*   **State Management**: React Context & LocalStorage
+*   **Auth**: Client-side custom auth tailored for privacy.
 
-**[https://v0.app/chat/rIGdARgxcPS](https://v0.app/chat/rIGdARgxcPS)**
+## 🚀 Getting Started
 
-## How It Works
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/0xKrishnaAI/my-ai-diet-app.git
+    cd my-ai-diet-app
+    ```
 
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    # or
+    pnpm install
+    ```
+
+3.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
+
+4.  **Open your browser:**
+    Navigate to [http://localhost:3000](http://localhost:3000) to see the app live!
+
+## 📂 Project Structure
+
+```
+├── app/                  # Next.js App Router pages
+│   ├── auth/             # Login & Signup pages
+│   ├── dashboard/        # Main user dashboard
+│   ├── onboarding/       # User setup flow
+│   └── profile/          # User profile settings
+├── components/           # Reusable UI components
+│   ├── ui/               # Base UI elements (buttons, cards, etc.)
+│   └── sections/         # Landing page sections
+├── lib/                  # Utilities and logic
+│   ├── auth.ts           # Authentication service
+│   └── store.ts          # State management
+└── public/               # Static assets
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is open-source and available under the [MIT License](LICENSE).
